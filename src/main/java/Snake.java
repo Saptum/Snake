@@ -14,4 +14,30 @@ public class Snake {
         snakeY[0] = y1;
         snakeY[1] = y2;
     }
+
+    public void move() {
+        // Перемещение сегментов хвоста после головы
+        for (int l = length; l > 0; l--) {
+            snakeX[l] = snakeX[l - 1];
+            snakeY[l] = snakeY[l - 1];
+        }
+
+        // Перемещение головы змеи в зависимости от текущего направления
+        // up
+        if (direction == 0) snakeY[0]--;
+        // right
+        if (direction == 2) snakeY[0]++;
+        // down
+        if (direction == 1) snakeX[0]++;
+        // left
+        if (direction == 3) snakeX[0]--;
+
+        // Зацикливание змеи вокруг экрана, если она выходит за границы
+        if (snakeY[0] > SnakeMain.HEIGHT - 1) snakeY[0] = 0;
+        if (snakeY[0] < 0) snakeY[0] = SnakeMain.HEIGHT - 1;
+
+        if (snakeX[0] > SnakeMain.WIDTH - 1) snakeX[0] = 0;
+        if (snakeX[0] < 0) snakeX[0] = SnakeMain.WIDTH - 1;
+
+    }
 }
