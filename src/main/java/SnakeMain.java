@@ -1,3 +1,6 @@
+import com.example.snake.model.Apple;
+import com.example.snake.model.Snake;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

@@ -1,3 +1,5 @@
+package com.example.snake.model;
+
 public class Snake {
     public int length = 2;
     // Направление змеи (0: вверх, 1: вниз, 2: вправо, 3: влево)
