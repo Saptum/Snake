@@ -1,45 +1,63 @@
 package com.example.snake.model;
 
+import java.awt.Point;
+import java.util.LinkedList;
+import java.util.List;
+
 public class Snake {
-    public int length = 2;
-    // Направление змеи (0: вверх, 1: вниз, 2: вправо, 3: влево)
-    public int direction = 2;
 
-    // Массивы для хранения координат X и Y сегментов змеи
-    public int[] snakeX = new int[300];
-    public int[] snakeY = new int[300];
+    private LinkedList<Point> body = new LinkedList<>();
+    private Direction direction = Direction.RIGHT;
 
-    // Конструктор для инициализации змеи начальными координатами (x1, y1) и (x2, y2)
-    public Snake(int x1, int y1, int x2, int y2) {
-        snakeX[0] = x1;
-        snakeX[1] = x2;
-        snakeY[0] = y1;
-        snakeY[1] = y2;
+    public Snake(int startX, int startY) {
+        body.add(new Point(startX, startY));
     }
 
     public void move() {
-        // Перемещение сегментов хвоста после головы
-        for (int l = length; l > 0; l--) {
-            snakeX[l] = snakeX[l - 1];
-            snakeY[l] = snakeY[l - 1];
+        // Получаем текущую голову
+        Point head = new Point(body.getFirst());
+
+        // На основе направления создаётся новая точка-голова
+        switch (direction) {
+            case UP -> head.y--;
+            case DOWN -> head.y++;
+            case LEFT -> head.x--;
+            case RIGHT -> head.x++;
         }
 
-        // Перемещение головы змеи в зависимости от текущего направления
-        // up
-        if (direction == 0) snakeY[0]--;
-        // right
-        if (direction == 2) snakeY[0]++;
-        // down
-        if (direction == 1) snakeX[0]++;
-        // left
-        if (direction == 3) snakeX[0]--;
-
-        // Зацикливание змеи вокруг экрана, если она выходит за границы
-        if (snakeY[0] > SnakeMain.HEIGHT - 1) snakeY[0] = 0;
-        if (snakeY[0] < 0) snakeY[0] = SnakeMain.HEIGHT - 1;
-
-        if (snakeX[0] > SnakeMain.WIDTH - 1) snakeX[0] = 0;
-        if (snakeX[0] < 0) snakeX[0] = SnakeMain.WIDTH - 1;
-
+        // Добавляем её как новую голову
+        body.addFirst(head);
+        body.removeLast();
     }
+
+    public void grow(){
+        Point tail = body.getLast();
+        body.add(new Point(tail));
+    }
+
+    public void setDirection(Direction newDirection) {
+        if (!isOpposite(newDirection)){
+            this.direction = newDirection;
+        }
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public List<Point> getBody() {
+        return body;
+    }
+
+    public Point getHead() {
+        return body.getFirst();
+    }
+
+    private boolean isOpposite(Direction newDirection) {
+        return  (direction == Direction.UP && newDirection == Direction.DOWN) ||
+                (direction == Direction.DOWN && newDirection == Direction.UP) ||
+                (direction == Direction.LEFT && newDirection == Direction.RIGHT) ||
+                (direction == Direction.RIGHT && newDirection == Direction.LEFT);
+    }
+
 }
