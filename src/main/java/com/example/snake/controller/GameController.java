@@ -1,77 +1,116 @@
 package com.example.snake.controller;
 
 
-import com.example.snake.model.*;
-import javafx.animation.AnimationTimer;
+import com.example.snake.model.Apple;
+import com.example.snake.model.Direction;
+import com.example.snake.model.GameState;
+import com.example.snake.model.Snake;
+import com.example.snake.view.GameView;
+import com.example.snake.view.MainMenuView;
+
+import javax.swing.*;
 
 public class GameController {
+
+    private final JFrame frame;
+    private final MainMenuView mainMenuView;
+
+    private GameView gameView;
+
+    private Snake snake;
+    private Apple apple;
 
     private final int gridWidth = 20;
     private final int gridHeight = 20;
 
-    private final long moveDelayNs = 150_000_000;
-
-    private final Snake snake;
-    private final Apple apple;
-
     private GameState state = GameState.RUNNING;
 
-    private AnimationTimer timer;
+    private Timer gameTimer;
+    private final int delayMs = 150; // скорость движения
 
-    public GameController() {
-        this.snake = new Snake(gridWidth/2, gridHeight/2);
-        this.apple = new Apple(gridWidth, gridHeight);
+    public GameController(JFrame frame, MainMenuView mainMenuView) {
+        this.frame = frame;
+        this.mainMenuView = mainMenuView;
+        initMenu();
     }
 
-    public void startGameLoop(Runnable onUpdate){
-        timer = new AnimationTimer() {
-            private long lastUpdate = 0;
+    private void initMenu() {
+        frame.setContentPane(mainMenuView);
 
-            @Override
-            public void handle(long now) {
-                if (now - lastUpdate > moveDelayNs) {
-                    update();
-                }
-            }
-        };
+        mainMenuView.getStartButton().addActionListener(e -> startGame());
+        mainMenuView.getExitButton().addActionListener(e -> System.exit(0));
+
+        frame.revalidate();
+        frame.repaint();
+    }
+
+    private void startGame() {
+        snake = new Snake(gridWidth / 2, gridHeight / 2);
+        apple = new Apple(gridWidth, gridHeight);
+        state = GameState.RUNNING;
+
+        gameView = new GameView(this, gridWidth, gridHeight, snake, apple);
+
+        frame.setContentPane(gameView);
+        frame.revalidate();
+        frame.repaint();
+
+        gameView.requestFocusInWindow();
+
+        startGameLoop();
+    }
+
+    private void startGameLoop() {
+        gameTimer = new Timer(delayMs, e -> update());
+        gameTimer.start();
     }
 
     private void update() {
         if (state != GameState.RUNNING) return;
-         snake.move();
-         checkAppleCollision();
-         checkWallCollision();
-         checkSnakeCollision();
+
+        snake.move();
+
+        checkAppleCollision();
+        checkWallCollision();
+        checkSnakeCollision();
+
+        gameView.repaint();
     }
 
-     private void checkAppleCollision() {
-        if (snake.getHead().x == apple.getX() &&
-            snake.getHead().y == apple.getY()){
+    private void checkAppleCollision() {
+        if (snake.getHead().x == apple.getX()
+                && snake.getHead().y == apple.getY()) {
 
             snake.grow();
             apple.relocate(gridWidth, gridHeight);
         }
-     }
+    }
 
-     private void checkWallCollision() {
+    private void checkWallCollision() {
         int x = snake.getHead().x;
         int y = snake.getHead().y;
-        if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight){
-            state = GameState.GAME_OVER;
-            timer.stop();
-        }
-     }
 
-   private void checkSnakeCollision() {
+        if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) {
+            state = GameState.GAME_OVER;
+            gameTimer.stop();
+        }
+    }
+
+    private void checkSnakeCollision() {
         var head = snake.getHead();
-         for (int i = 0; i < snake.getBody().size(); i++){
-             if (head.equals(snake.getBody().get(i))){
-                 state = GameState.GAME_OVER;
-                 timer.stop();
-                 break;
-             }
-         }
-   }
+
+        for (int i = 1; i < snake.getBody().size(); i++) {
+            if (head.equals(snake.getBody().get(i))) {
+                state = GameState.GAME_OVER;
+                gameTimer.stop();
+                break;
+            }
+        }
+    }
+
+    public void setDirection(Direction direction) {
+        snake.setDirection(direction);
+    }
 
     public Snake getSnake() {
         return snake;
@@ -84,9 +123,4 @@ public class GameController {
     public GameState getState() {
         return state;
     }
-
-    public void setDirection(Direction direction) {
-        snake.setDirection(direction);
-    }
-
 }
