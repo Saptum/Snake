@@ -108,6 +108,14 @@ public class GameController {
         }
     }
 
+    public void setPause() {
+        if (state == GameState.RUNNING) {
+            state = GameState.PAUSED;
+        }else if (state == GameState.PAUSED) {
+            state = GameState.RUNNING;
+        }
+    }
+
     public void setDirection(Direction direction) {
         snake.setDirection(direction);
     }
