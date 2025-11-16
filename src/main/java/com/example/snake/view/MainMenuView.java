@@ -30,15 +30,6 @@ public class MainMenuView extends JPanel {
         add(exitButton);
     }
 
-//    public void start(ActionListener actionListener) {
-//        startButton.addActionListener(actionListener);
-//    }
-//
-//    public void exit(ActionListener actionListener) {
-//        exitButton.addActionListener(actionListener);
-//    }
-
-
     public JButton getExitButton() {
         return exitButton;
     }
