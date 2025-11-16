@@ -11,24 +11,39 @@ public class MainMenuView extends JPanel {
     private  final JButton exitButton;
 
     public MainMenuView() {
-        setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-        setBorder(BorderFactory.createEmptyBorder(40,40,40,40));
-        startButton = new JButton("Start");
+
+        setPreferredSize(new Dimension(600, 600));
+
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        startButton = new JButton("Start Game");
         exitButton = new JButton("Exit");
 
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        add(Box.createVerticalStrut(200));
         add(startButton);
-        add(Box.createRigidArea(new Dimension(0,20)));
+        add(Box.createVerticalStrut(20));
         add(exitButton);
     }
 
-    public void start(ActionListener actionListener) {
-        startButton.addActionListener(actionListener);
+//    public void start(ActionListener actionListener) {
+//        startButton.addActionListener(actionListener);
+//    }
+//
+//    public void exit(ActionListener actionListener) {
+//        exitButton.addActionListener(actionListener);
+//    }
+
+
+    public JButton getExitButton() {
+        return exitButton;
     }
 
-    public void exit(ActionListener actionListener) {
-        exitButton.addActionListener(actionListener);
+    public JButton getStartButton() {
+        return startButton;
     }
 }
