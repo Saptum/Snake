@@ -1,75 +1,82 @@
 package com.example.snake.view;
 
+
 import com.example.snake.controller.GameController;
 import com.example.snake.model.Apple;
 import com.example.snake.model.Direction;
-import com.example.snake.model.Snake;
 import com.example.snake.model.GameState;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
+import com.example.snake.model.Snake;
 
-public class GameView extends StackPane {
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+public class GameView extends JPanel {
 
     private final GameController controller;
-    private final Canvas canvas;
-
     private final int cellSize = 25;
 
-    public GameView() {
-        this.controller = new GameController();
+    private final int gridWidth;
+    private final int gridHeight;
 
-        int width = 20 * cellSize;
-        int height = 20 * cellSize;
+    public GameView(GameController controller,
+                    int gridWidth,
+                    int gridHeight,
+                    Snake snake,
+                    Apple apple) {
 
-        this.canvas = new Canvas(width, height);
-        getChildren().add(canvas);
+        this.controller = controller;
+        this.gridWidth = gridWidth;
+        this.gridHeight = gridHeight;
 
+        setPreferredSize(new Dimension(gridWidth * cellSize, gridHeight * cellSize));
+        setBackground(Color.BLACK);
+
+        setFocusable(true);
         setupKeyboard();
-        controller.startGameLoop(this::draw);
-
     }
 
-    private void setupKeyboard() {
-        setFocusTraversable(true);
-        setOnKeyPressed(event -> {
-            KeyCode code = event.getCode();
 
-            switch (code) {
-                case UP -> controller.setDirection(Direction.UP);
-                case DOWN -> controller.setDirection(Direction.DOWN);
-                case LEFT -> controller.setDirection(Direction.LEFT);
-                case RIGHT -> controller.setDirection(Direction.RIGHT);
+
+    private void setupKeyboard() {
+        addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_UP -> controller.setDirection(Direction.UP);
+                    case KeyEvent.VK_DOWN -> controller.setDirection(Direction.DOWN);
+                    case KeyEvent.VK_LEFT -> controller.setDirection(Direction.LEFT);
+                    case KeyEvent.VK_RIGHT -> controller.setDirection(Direction.RIGHT);
+                }
             }
         });
     }
 
-    private void draw() {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.BLACK);
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
 
-        drawApple(gc);
-        drawSnake(gc);
+        drawApple(g);
+        drawSnake(g);
 
         if (controller.getState() == GameState.GAME_OVER) {
-            drawGameOver(gc);
+            drawGameOver(g);
         }
     }
 
-    private void drawSnake(GraphicsContext gc) {
+    private void drawSnake(Graphics g) {
         Snake snake = controller.getSnake();
 
-        gc.setFill(Color.LIGHTGREEN);
+        g.setColor(Color.GREEN);
 
-        snake.getBody().forEach(apple -> {
-            gc.fillRect(apple.x * cellSize, apple.y * cellSize, cellSize, cellSize);
-        });
+        snake.getBody().forEach(p ->
+                g.fillRect(p.x * cellSize, p.y * cellSize, cellSize, cellSize)
+        );
 
-        gc.setFill(Color.GREEN);
-        gc.fillRect(
+        g.setColor(Color.YELLOW);
+        g.fillRect(
                 snake.getHead().x * cellSize,
                 snake.getHead().y * cellSize,
                 cellSize,
@@ -77,11 +84,11 @@ public class GameView extends StackPane {
         );
     }
 
-    private void drawApple(GraphicsContext gc) {
+    private void drawApple(Graphics g) {
         Apple apple = controller.getApple();
 
-        gc.setFill(Color.RED);
-        gc.fillOval(
+        g.setColor(Color.RED);
+        g.fillOval(
                 apple.getX() * cellSize,
                 apple.getY() * cellSize,
                 cellSize,
@@ -89,13 +96,15 @@ public class GameView extends StackPane {
         );
     }
 
-    private void drawGameOver(GraphicsContext gc) {
-        gc.setFill(Color.WHITE);
-        gc.setFont(javafx.scene.text.Font.font(40));
-        gc.fillText(
-                "Game Over",
-                canvas.getWidth() / 2 -120,
-                canvas.getHeight() / 2
-        );
+    private void drawGameOver(Graphics g) {
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 40));
+
+        String text = "Game Over";
+        int textWidth = g.getFontMetrics().stringWidth(text);
+
+        g.drawString(text,
+                (getWidth() - textWidth) / 2,
+                getHeight() / 2);
     }
 }
