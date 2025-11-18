@@ -7,14 +7,14 @@ public class Apple {
     private int x;
     private int y;
 
-    public Apple(int gridWidth, int girdHeight) {
-        relocate(gridWidth,girdHeight);
+    public Apple(int gridWidth, int gridHeight) {
+        relocate(gridWidth,gridHeight);
     }
 
-    public void relocate(int gridWidth, int girdHeight) {
+    public void relocate(int gridWidth, int gridHeight) {
         Random random = new Random();
         this.x = random.nextInt(gridWidth);
-        this.y = random.nextInt(girdHeight);
+        this.y = random.nextInt(gridHeight);
     }
 
     public int getX() {
