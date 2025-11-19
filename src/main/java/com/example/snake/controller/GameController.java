@@ -42,12 +42,12 @@ public class GameController {
         frame.setContentPane(mainMenuView);
 
         mainMenuView.getStartButton().addActionListener(e -> startGame());
-        mainMenuView.getRestartButton().addActionListener(e -> startGame());
         mainMenuView.getExitButton().addActionListener(e -> System.exit(0));
 
         frame.revalidate();
         frame.repaint();
     }
+
 
     private void startGame() {
         snake = new Snake(gridWidth / 2, gridHeight / 2);
@@ -67,6 +67,19 @@ public class GameController {
 
         startGameLoop();
     }
+
+    public void restartGame() {
+        if (gameTimer != null && gameTimer.isRunning()) {
+            gameTimer.stop();
+        }
+        startGame();
+    }
+
+    public void reInitMenu(){
+        initMenu();
+    }
+
+
 
     private void startGameLoop() {
         gameTimer = new Timer(delayMs, e -> update());

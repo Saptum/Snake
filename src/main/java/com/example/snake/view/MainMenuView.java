@@ -9,7 +9,6 @@ public class MainMenuView extends JPanel {
 
     private  final JButton startButton;
     private  final JButton exitButton;
-    private  final JButton restartButton;
 
 
     public MainMenuView() {
@@ -21,16 +20,14 @@ public class MainMenuView extends JPanel {
 
         startButton = new JButton("Start Game");
         exitButton = new JButton("Exit");
-        restartButton = new JButton("Restart");
+
 
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        restartButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
 
         add(Box.createVerticalStrut(200));
         add(startButton);
-        add(Box.createVerticalStrut(20));
-        add(restartButton);
         add(Box.createVerticalStrut(20));
         add(exitButton);
     }
@@ -43,7 +40,4 @@ public class MainMenuView extends JPanel {
         return startButton;
     }
 
-    public JButton getRestartButton() {
-        return restartButton;
-    }
 }

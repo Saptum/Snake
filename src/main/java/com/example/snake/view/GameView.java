@@ -15,6 +15,7 @@ import java.awt.event.KeyEvent;
 public class GameView extends JPanel {
 
     private final GameController controller;
+    private final GameOverView gameOverView;
     private final int cellSize;
 
     private final int gridWidth;
@@ -29,11 +30,21 @@ public class GameView extends JPanel {
         this.gridWidth = controller.getGridWidth();
         this.gridHeight = controller.getGridHeight();
 
+        this.gameOverView = new GameOverView();
+        setupGameOverButtons();
+
+
         setPreferredSize(controller.getPreferredSize());
         setBackground(Color.BLACK);
-
+        setLayout(new BorderLayout());
         setFocusable(true);
         setupKeyboard();
+    }
+
+    private void setupGameOverButtons(){
+        gameOverView.getRestartButton().addActionListener(e -> controller.restartGame());
+        gameOverView.getMenuButton().addActionListener(e -> controller.reInitMenu());
+        gameOverView.getExitButton().addActionListener(e -> System.exit(0));
     }
 
 
@@ -43,6 +54,10 @@ public class GameView extends JPanel {
 
             @Override
             public void keyPressed(KeyEvent e) {
+                if (controller.getState() == GameState.GAME_OVER) {
+                    return;
+                }
+
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_UP -> controller.setDirection(Direction.UP);
                     case KeyEvent.VK_DOWN -> controller.setDirection(Direction.DOWN);
@@ -64,8 +79,11 @@ public class GameView extends JPanel {
         if(controller.getState() == GameState.PAUSED) {
             drawPause(g);
         }
+
         if (controller.getState() == GameState.GAME_OVER) {
-            drawGameOver(g);
+            showGameOverScreen();
+        }else {
+            hideGameOverScreen();
         }
 
     }
@@ -100,17 +118,35 @@ public class GameView extends JPanel {
         );
     }
 
-    private void drawGameOver(Graphics g) {
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 40));
-
-        String text = "Game Over";
-        int textWidth = g.getFontMetrics().stringWidth(text);
-
-        g.drawString(text,
-                (getWidth() - textWidth) / 2,
-                getHeight() / 2);
+    private void showGameOverScreen() {
+        if(gameOverView.getParent() != this){
+            this.add(gameOverView, BorderLayout.CENTER);
+            this.revalidate();
+            this.repaint();
+        }
     }
+
+    private void hideGameOverScreen() {
+        if(gameOverView.getParent() == this){
+            this.remove(gameOverView);
+            this.revalidate();
+            this.repaint();
+        }
+    }
+
+//    private void drawGameOver(Graphics g) {
+//        g.setColor(Color.WHITE);
+//        g.setFont(new Font("Arial", Font.BOLD, 40));
+//
+//        String text = "Game Over";
+//        int textWidth = g.getFontMetrics().stringWidth(text);
+//
+//        g.drawString(text,
+//                (getWidth() - textWidth) / 2,
+//                getHeight() / 2);
+//
+//
+//    }
 
     private void drawPause(Graphics g) {
         g.setColor(Color.WHITE);
@@ -122,6 +158,7 @@ public class GameView extends JPanel {
         g.drawString(text,
                 (getWidth() - textWidth) / 2,
                 getHeight() / 2);
+
     }
 
 
