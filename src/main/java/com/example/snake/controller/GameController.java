@@ -25,13 +25,7 @@ public class GameController {
     private final int gridHeight = 20;
     private final int cellSize = 25;
 
-    public int getGridWidth() { return gridWidth; }
-    public int getGridHeight() { return gridHeight; }
-    public int getCellSize() { return cellSize; }
 
-    public Dimension getPreferredSize() {
-        return new Dimension(gridWidth * cellSize, gridHeight * cellSize);
-    }
 
     private GameState state = GameState.RUNNING;
 
@@ -80,17 +74,23 @@ public class GameController {
     }
 
     private void update() {
-        if (state != GameState.RUNNING) return;
+        if (state != GameState.RUNNING && state != GameState.PAUSED){
+            return;
+        } else if (state == GameState.PAUSED) {
+            getState();
+            gameView.repaint();
+        }else if (state == GameState.RUNNING) {
+            snake.move();
 
-        snake.move();
+            checkWallCollision();
+            if (state == GameState.GAME_OVER) return;
+            checkSnakeCollision();
+            if (state == GameState.GAME_OVER) return;
+            checkAppleCollision();
 
-        checkWallCollision();
-        if (state == GameState.GAME_OVER) return;
-        checkSnakeCollision();
-        if (state == GameState.GAME_OVER) return;
-        checkAppleCollision();
+            gameView.repaint();
+        }
 
-        gameView.repaint();
     }
 
     private void checkAppleCollision() {
@@ -151,6 +151,8 @@ public class GameController {
         }else if (state == GameState.PAUSED) {
             state = GameState.RUNNING;
         }
+
+        getState();
     }
 
     public void setDirection(Direction direction) {
@@ -165,6 +167,13 @@ public class GameController {
         return apple;
     }
 
+    public int getGridWidth() { return gridWidth; }
+    public int getGridHeight() { return gridHeight; }
+    public int getCellSize() { return cellSize; }
+
+    public Dimension getPreferredSize() {
+        return new Dimension(gridWidth * cellSize, gridHeight * cellSize);
+    }
 
     public GameState getState() {
         return state;
