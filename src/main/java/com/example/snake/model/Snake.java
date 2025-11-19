@@ -14,10 +14,8 @@ public class Snake {
     }
 
     public void move() {
-        // Получаем текущую голову
         Point head = new Point(body.getFirst());
 
-        // На основе направления создаётся новая точка-голова
         switch (direction) {
             case UP: head = new Point(head.x, head.y - 1); break;
             case DOWN: head = new Point(head.x, head.y + 1); break;
@@ -25,7 +23,6 @@ public class Snake {
             case RIGHT: head = new Point(head.x + 1, head.y); break;
         }
 
-        // Добавляем её как новую голову
         body.addFirst(head);
         body.removeLast();
     }
