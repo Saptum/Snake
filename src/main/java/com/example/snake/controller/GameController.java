@@ -9,6 +9,7 @@ import com.example.snake.view.GameView;
 import com.example.snake.view.MainMenuView;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class GameController {
 
@@ -38,6 +39,7 @@ public class GameController {
         frame.setContentPane(mainMenuView);
 
         mainMenuView.getStartButton().addActionListener(e -> startGame());
+        mainMenuView.getRestartButton().addActionListener(e -> startGame());
         mainMenuView.getExitButton().addActionListener(e -> System.exit(0));
 
         frame.revalidate();
@@ -68,22 +70,38 @@ public class GameController {
     private void update() {
         if (state != GameState.RUNNING) return;
 
+
         snake.move();
 
-        checkAppleCollision();
         checkWallCollision();
+        if (state == GameState.GAME_OVER) return;
         checkSnakeCollision();
+        if (state == GameState.GAME_OVER) return;
+        checkAppleCollision();
 
         gameView.repaint();
     }
 
     private void checkAppleCollision() {
-        if (snake.getHead().x == apple.getX()
-                && snake.getHead().y == apple.getY()) {
+        if (snake.getHead().x == apple.getX()&& snake.getHead().y == apple.getY()) {
+
+            do {
+                apple.relocate(gridWidth, gridHeight);
+            } while (isAppleOnSnake());
 
             snake.grow();
-            apple.relocate(gridWidth, gridHeight);
+
+
         }
+    }
+
+    private boolean isAppleOnSnake() {
+        for (Point segment : snake.getBody()) {
+            if (segment.x == apple.getX() && segment.y == apple.getY()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void checkWallCollision() {
@@ -98,12 +116,13 @@ public class GameController {
 
     private void checkSnakeCollision() {
         var head = snake.getHead();
+        var body = snake.getBody();
 
-        for (int i = 1; i < snake.getBody().size(); i++) {
-            if (head.equals(snake.getBody().get(i))) {
+        for (int i = 1; i < body.size(); i++) {
+            if (head.equals(body.get(i))) {
                 state = GameState.GAME_OVER;
                 gameTimer.stop();
-                break;
+                return;
             }
         }
     }
@@ -127,6 +146,7 @@ public class GameController {
     public Apple getApple() {
         return apple;
     }
+
 
     public GameState getState() {
         return state;
