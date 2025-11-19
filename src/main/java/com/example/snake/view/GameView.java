@@ -15,22 +15,21 @@ import java.awt.event.KeyEvent;
 public class GameView extends JPanel {
 
     private final GameController controller;
-    private final int cellSize = 25;
+    private final int cellSize;
 
     private final int gridWidth;
     private final int gridHeight;
 
     public GameView(GameController controller,
-                    int gridWidth,
-                    int gridHeight,
                     Snake snake,
                     Apple apple) {
 
         this.controller = controller;
-        this.gridWidth = gridWidth;
-        this.gridHeight = gridHeight;
+        this.cellSize = controller.getCellSize();
+        this.gridWidth = controller.getGridWidth();
+        this.gridHeight = controller.getGridHeight();
 
-        setPreferredSize(new Dimension(gridWidth * cellSize, gridHeight * cellSize));
+        setPreferredSize(controller.getPreferredSize());
         setBackground(Color.BLACK);
 
         setFocusable(true);
