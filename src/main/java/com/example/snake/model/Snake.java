@@ -19,10 +19,10 @@ public class Snake {
 
         // На основе направления создаётся новая точка-голова
         switch (direction) {
-            case UP -> head.y--;
-            case DOWN -> head.y++;
-            case LEFT -> head.x--;
-            case RIGHT -> head.x++;
+            case UP: head = new Point(head.x, head.y - 1); break;
+            case DOWN: head = new Point(head.x, head.y + 1); break;
+            case LEFT: head = new Point(head.x - 1, head.y); break;
+            case RIGHT: head = new Point(head.x + 1, head.y); break;
         }
 
         // Добавляем её как новую голову
