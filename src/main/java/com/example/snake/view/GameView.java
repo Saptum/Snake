@@ -61,12 +61,13 @@ public class GameView extends JPanel {
         drawApple(g);
         drawSnake(g);
 
-        if (controller.getState() == GameState.GAME_OVER) {
-            drawGameOver(g);
-        }
         if(controller.getState() == GameState.PAUSED) {
             drawPause(g);
         }
+        if (controller.getState() == GameState.GAME_OVER) {
+            drawGameOver(g);
+        }
+
     }
 
     private void drawSnake(Graphics g) {
