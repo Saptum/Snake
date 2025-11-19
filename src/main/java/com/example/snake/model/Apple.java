@@ -8,7 +8,7 @@ public class Apple {
     private int y;
 
     public Apple(int gridWidth, int gridHeight) {
-        relocate(gridWidth,gridHeight);
+        relocate(gridWidth, gridHeight);
     }
 
     public void relocate(int gridWidth, int gridHeight) {

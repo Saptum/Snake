@@ -26,7 +26,6 @@ public class GameController {
     private final int cellSize = 25;
 
 
-
     private GameState state = GameState.RUNNING;
 
     private Timer gameTimer;
@@ -75,10 +74,9 @@ public class GameController {
         startGame();
     }
 
-    public void reInitMenu(){
+    public void reInitMenu() {
         initMenu();
     }
-
 
 
     private void startGameLoop() {
@@ -87,12 +85,12 @@ public class GameController {
     }
 
     private void update() {
-        if (state != GameState.RUNNING && state != GameState.PAUSED){
+        if (state != GameState.RUNNING && state != GameState.PAUSED) {
             return;
         } else if (state == GameState.PAUSED) {
             getState();
             gameView.repaint();
-        }else if (state == GameState.RUNNING) {
+        } else if (state == GameState.RUNNING) {
             snake.move();
 
             checkWallCollision();
@@ -107,7 +105,7 @@ public class GameController {
     }
 
     private void checkAppleCollision() {
-        if (snake.getHead().x == apple.getX()&& snake.getHead().y == apple.getY()) {
+        if (snake.getHead().x == apple.getX() && snake.getHead().y == apple.getY()) {
 
             do {
                 apple.relocate(gridWidth, gridHeight);
@@ -161,7 +159,7 @@ public class GameController {
     public void setPause() {
         if (state == GameState.RUNNING) {
             state = GameState.PAUSED;
-        }else if (state == GameState.PAUSED) {
+        } else if (state == GameState.PAUSED) {
             state = GameState.RUNNING;
         }
 
@@ -180,9 +178,17 @@ public class GameController {
         return apple;
     }
 
-    public int getGridWidth() { return gridWidth; }
-    public int getGridHeight() { return gridHeight; }
-    public int getCellSize() { return cellSize; }
+    public int getGridWidth() {
+        return gridWidth;
+    }
+
+    public int getGridHeight() {
+        return gridHeight;
+    }
+
+    public int getCellSize() {
+        return cellSize;
+    }
 
     public Dimension getPreferredSize() {
         return new Dimension(gridWidth * cellSize, gridHeight * cellSize);

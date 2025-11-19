@@ -24,7 +24,6 @@ public class GameView extends JPanel {
     public GameView(GameController controller,
                     Snake snake,
                     Apple apple) {
-
         this.controller = controller;
         this.cellSize = controller.getCellSize();
         this.gridWidth = controller.getGridWidth();
@@ -33,7 +32,6 @@ public class GameView extends JPanel {
         this.gameOverView = new GameOverView();
         setupGameOverButtons();
 
-
         setPreferredSize(controller.getPreferredSize());
         setBackground(Color.BLACK);
         setLayout(new BorderLayout());
@@ -41,12 +39,11 @@ public class GameView extends JPanel {
         setupKeyboard();
     }
 
-    private void setupGameOverButtons(){
+    private void setupGameOverButtons() {
         gameOverView.getRestartButton().addActionListener(e -> controller.restartGame());
         gameOverView.getMenuButton().addActionListener(e -> controller.reInitMenu());
         gameOverView.getExitButton().addActionListener(e -> System.exit(0));
     }
-
 
 
     private void setupKeyboard() {
@@ -76,13 +73,13 @@ public class GameView extends JPanel {
         drawApple(g);
         drawSnake(g);
 
-        if(controller.getState() == GameState.PAUSED) {
+        if (controller.getState() == GameState.PAUSED) {
             drawPause(g);
         }
 
         if (controller.getState() == GameState.GAME_OVER) {
             showGameOverScreen();
-        }else {
+        } else {
             hideGameOverScreen();
         }
 
@@ -119,7 +116,13 @@ public class GameView extends JPanel {
     }
 
     private void showGameOverScreen() {
-        if(gameOverView.getParent() != this){
+        Graphics g = getGraphics();
+        if (g != null) {
+            g.setColor(new Color(0, 0, 0, 180));
+            g.fillRect(0, 0, getWidth(), getHeight());
+        }
+
+        if (gameOverView.getParent() != this) {
             this.add(gameOverView, BorderLayout.CENTER);
             this.revalidate();
             this.repaint();
@@ -127,26 +130,13 @@ public class GameView extends JPanel {
     }
 
     private void hideGameOverScreen() {
-        if(gameOverView.getParent() == this){
+        if (gameOverView.getParent() == this) {
             this.remove(gameOverView);
             this.revalidate();
             this.repaint();
         }
     }
 
-//    private void drawGameOver(Graphics g) {
-//        g.setColor(Color.WHITE);
-//        g.setFont(new Font("Arial", Font.BOLD, 40));
-//
-//        String text = "Game Over";
-//        int textWidth = g.getFontMetrics().stringWidth(text);
-//
-//        g.drawString(text,
-//                (getWidth() - textWidth) / 2,
-//                getHeight() / 2);
-//
-//
-//    }
 
     private void drawPause(Graphics g) {
         g.setColor(Color.WHITE);
@@ -160,6 +150,5 @@ public class GameView extends JPanel {
                 getHeight() / 2);
 
     }
-
 
 }

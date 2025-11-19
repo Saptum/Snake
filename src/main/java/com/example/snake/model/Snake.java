@@ -17,23 +17,31 @@ public class Snake {
         Point head = new Point(body.getFirst());
 
         switch (direction) {
-            case UP: head = new Point(head.x, head.y - 1); break;
-            case DOWN: head = new Point(head.x, head.y + 1); break;
-            case LEFT: head = new Point(head.x - 1, head.y); break;
-            case RIGHT: head = new Point(head.x + 1, head.y); break;
+            case UP:
+                head = new Point(head.x, head.y - 1);
+                break;
+            case DOWN:
+                head = new Point(head.x, head.y + 1);
+                break;
+            case LEFT:
+                head = new Point(head.x - 1, head.y);
+                break;
+            case RIGHT:
+                head = new Point(head.x + 1, head.y);
+                break;
         }
 
         body.addFirst(head);
         body.removeLast();
     }
 
-    public void grow(){
+    public void grow() {
         Point tail = body.getLast();
         body.add(new Point(tail));
     }
 
     public void setDirection(Direction newDirection) {
-        if (!isOpposite(newDirection)){
+        if (!isOpposite(newDirection)) {
             this.direction = newDirection;
         }
     }
@@ -51,7 +59,7 @@ public class Snake {
     }
 
     private boolean isOpposite(Direction newDirection) {
-        return  (direction == Direction.UP && newDirection == Direction.DOWN) ||
+        return (direction == Direction.UP && newDirection == Direction.DOWN) ||
                 (direction == Direction.DOWN && newDirection == Direction.UP) ||
                 (direction == Direction.LEFT && newDirection == Direction.RIGHT) ||
                 (direction == Direction.RIGHT && newDirection == Direction.LEFT);
