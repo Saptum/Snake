@@ -23,6 +23,15 @@ public class GameController {
 
     private final int gridWidth = 20;
     private final int gridHeight = 20;
+    private final int cellSize = 25;
+
+    public int getGridWidth() { return gridWidth; }
+    public int getGridHeight() { return gridHeight; }
+    public int getCellSize() { return cellSize; }
+
+    public Dimension getPreferredSize() {
+        return new Dimension(gridWidth * cellSize, gridHeight * cellSize);
+    }
 
     private GameState state = GameState.RUNNING;
 
@@ -49,11 +58,14 @@ public class GameController {
     private void startGame() {
         snake = new Snake(gridWidth / 2, gridHeight / 2);
         apple = new Apple(gridWidth, gridHeight);
+
         state = GameState.RUNNING;
 
-        gameView = new GameView(this, gridWidth, gridHeight, snake, apple);
+        gameView = new GameView(this, snake, apple);
 
         frame.setContentPane(gameView);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
         frame.revalidate();
         frame.repaint();
 
@@ -69,7 +81,6 @@ public class GameController {
 
     private void update() {
         if (state != GameState.RUNNING) return;
-
 
         snake.move();
 
@@ -91,7 +102,6 @@ public class GameController {
 
             snake.grow();
 
-
         }
     }
 
@@ -109,8 +119,13 @@ public class GameController {
         int y = snake.getHead().y;
 
         if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) {
+
             state = GameState.GAME_OVER;
             gameTimer.stop();
+
+            if (gameView != null) {
+                gameView.repaint();
+            }
         }
     }
 
@@ -122,6 +137,9 @@ public class GameController {
             if (head.equals(body.get(i))) {
                 state = GameState.GAME_OVER;
                 gameTimer.stop();
+                if (gameView != null) {
+                    gameView.repaint();
+                }
                 return;
             }
         }
