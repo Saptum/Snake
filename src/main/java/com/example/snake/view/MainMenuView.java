@@ -14,10 +14,9 @@ public class MainMenuView extends JPanel {
 
     public MainMenuView() {
 
-        setPreferredSize(new Dimension(600, 600));
+        setPreferredSize(new Dimension(500, 500));
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
         setAlignmentX(Component.CENTER_ALIGNMENT);
 
         startButton = new JButton("Start Game");
