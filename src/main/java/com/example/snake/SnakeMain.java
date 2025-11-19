@@ -10,8 +10,9 @@ public class SnakeMain {
         SwingUtilities.invokeLater(() ->{
             JFrame frame = new JFrame("Snake");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setResizable(false);
             MainMenuView mainMenuView = new MainMenuView();
-            new GameController(frame,mainMenuView);
+            GameController controller = new GameController(frame, mainMenuView);
 
             frame.pack();
             frame.setLocationRelativeTo(null);
